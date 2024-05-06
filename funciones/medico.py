@@ -7,14 +7,14 @@ import ui.UiMedico as umc
 def NewMedic ():
 
    title =  """
-   *************************
-   ** REGISTRO DE MEDICOS **
-   *************************
+   *********
+   * REGISTRO DE MEDICOS *
+   *********
    """
    gf.borrar_pantalla()
    print(title)
    identificacion = input("ingrese el numero de identificacion : ")
-   nombreApellido = input("ingrese el nombres y apellidos :" )
+   nombreApellido = input("ingrese los nombres y apellidos :" )
    correo = input("ingrese su correo electronico :" )
    Nrconsultorio = input("ingrese el numero del consultorio:")
    horarioAtencion = input("ingrese la hora:")
@@ -22,8 +22,8 @@ def NewMedic ():
 
    medico = {
       'identificacion': identificacion,
-      'nombre:Apellido': nombreApellido,
-      'correoElectronico' : correo,
+      'nombreApellido': nombreApellido,
+      'correoElectronico' : correo, 
       'consultorio' : Nrconsultorio,
       'horarioAtencion': horarioAtencion,
       'especialidad': especialidad
@@ -31,31 +31,36 @@ def NewMedic ():
    
    cf.AddData('data',identificacion,medico)
    gf.centroMedicoAL.get('data').update({identificacion:medico})
-   if(bool(input("desdea ingresar otro medico S(si)) o Enter(no)"))):
+   if (bool(input("desdea ingresar otro medico S(si) o Enter(no)"))):
       NewMedic()
    else:
     umc.MenuMedico(0)
 
-def searchData():
-   criterio = input('ingrese la ID del medico:')
-   dataMedico=gf.centroMedicoAL.get('dataMedico')
+def searchData(identificaion):
+   dataMedico=gf.centroMedicoAL.get('data').get(identificaion)
    return dataMedico
 
+def editMedic():
+   identificacion = input("Ingrese la identificación del médico que desea editar: ")
+   dataMedico = searchData(identificacion)
 
-def Modifydata():
-   dataMedico = searchData() 
+   if dataMedico:
+      print("Datos actuales del médico:")
+      print(dataMedico)
 
-   identificacion,nombreApellido,correo,Nrconsultorio = dataMedico.values()
-   for key in dataMedico.keys():
-      if(key != 'identificacion'and key != 'medico'):
-         if (bool(input('Desea modificar el {key}  S(si) o enter (no)'))):
-            searchData[key] = input (f'ingrese el numero valor para {key}')
-   gf.centroMedicoAL.get('dataMedico').update({identificacion:dataMedico})
-   umc.MenuMedico
+        # Solicitar al usuario los campos que desea modificar
+      fields_to_edit = ['nombreApellido', 'correoElectronico', 'consultorio', 'horarioAtencion', 'especialidad']
+      for field in fields_to_edit:
+         if bool(input(f"Desea modificar {field}? (Sí/Si o Enter para No): ")):
+               new_value = input(f"Ingrese el nuevo valor para {field}: ")
+               dataMedico[field] = new_value
 
-
-
-
+        # Actualizar los datos del médico
+      gf.centroMedicoAL.get('data').update({identificacion: dataMedico})
+      cf.UpsateFile(gf.centroMedicoAL)
+      print("Datos del médico actualizados correctamente.")
+   else:
+        print("No se encontró ningún médico con la identificación proporcionada.")
 
 
 
